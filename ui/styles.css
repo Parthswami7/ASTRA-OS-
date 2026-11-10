@@ -1,0 +1,296 @@
+.astra-core {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    margin-top: 50px;
+}
+
+.ring {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 255, 255, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.ring-inner {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+
+/* IDLE STATE: Faint blue, spinning slowly */
+.idle {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+}
+
+/* ACTIVE STATE: Bright cyan, pulsing heavily like sound waves */
+.active {
+    border-color: rgba(0, 255, 255, 0.8);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6), inset 0 0 20px rgba(0, 255, 255, 0.4);
+    animation: pulse 0.8s infinite alternate;
+}
+
+.active .ring-inner {
+    background: rgba(0, 255, 255, 0.4);
+    border-color: rgba(0, 255, 255, 1);
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
+    animation: inner-pulse 0.4s infinite alternate;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); box-shadow: 0 0 50px rgba(0, 255, 255, 0.9); }
+}
+@keyframes inner-pulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.2); }
+}
+
+:root {
+    --cyan: #00f3ff;
+    --dark-cyan: rgba(0, 243, 255, 0.1);
+    --alert-orange: #ff5500;
+    --bg-color: #02040a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--cyan);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    background-image: radial-gradient(circle at center, #051322 0%, #000000 100%);
+}
+
+/* THE 3D COCKPIT WRAPPER */
+#hud-wrapper {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 50px;
+    z-index: 10;
+    pointer-events: none;
+    
+    /* This creates the 3D depth field */
+    perspective: 1500px; 
+    transform-style: preserve-3d;
+}
+
+.hud-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 320px;
+    pointer-events: auto; 
+    transition: transform 0.5s ease;
+}
+
+/* Bending the left panel inward */
+.left-panel {
+    transform: rotateY(25deg) translateZ(100px);
+    box-shadow: 20px 0 30px -20px rgba(0, 243, 255, 0.2);
+}
+
+/* Bending the right panel inward */
+.right-panel {
+    transform: rotateY(-25deg) translateZ(100px);
+    box-shadow: -20px 0 30px -20px rgba(0, 243, 255, 0.2);
+}
+
+/* Pushing the center forward */
+.center-panel {
+    align-items: center;
+    justify-content: center;
+    width: 450px;
+    transform: translateZ(50px);
+}
+
+/* Sci-Fi Angled Boxes */
+.hud-box {
+    background: rgba(0, 243, 255, 0.05);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(0, 243, 255, 0.4);
+    padding: 20px;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 15px rgba(0, 243, 255, 0.1);
+    clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+}
+
+.hud-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+.box-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+    padding-bottom: 5px;
+    text-shadow: 0 0 5px var(--cyan);
+}
+
+/* Circular Gauges for CPU & RAM */
+.gauges {
+    display: flex;
+    justify-content: space-around;
+}
+
+.gauge-container { text-align: center; }
+
+.circular-gauge {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: conic-gradient(var(--cyan) var(--progress), rgba(0, 243, 255, 0.1) 0deg);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px auto;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+    border: 1px solid rgba(0, 243, 255, 0.5);
+    position: relative;
+}
+
+/* Adds a spinning target ring around gauges */
+.circular-gauge::after {
+    content: '';
+    position: absolute;
+    top: -5px; left: -5px; right: -5px; bottom: -5px;
+    border: 1px dashed rgba(0, 243, 255, 0.5);
+    border-radius: 50%;
+    animation: spin 10s linear infinite;
+}
+
+.gauge-inner {
+    width: 75px; height: 75px;
+    background: var(--bg-color);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; font-weight: bold;
+    text-shadow: 0 0 8px var(--cyan);
+}
+
+.gauge-label { font-size: 0.75rem; letter-spacing: 2px; }
+
+/* Empty Camera Feed Grid */
+.camera-feed {
+    height: 160px;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 243, 255, 0.1) 2px, rgba(0, 243, 255, 0.1) 4px);
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+}
+
+.scan-line {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 2px;
+    background: var(--cyan);
+    opacity: 0.8;
+    animation: scan 2.5s linear infinite;
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+@keyframes scan { 0% { top: -10px; } 100% { top: 100%; } }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.feed-text {
+    text-align: center; font-size: 0.8rem; line-height: 1.5;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* Center Clock & Date */
+.time-display {
+    text-align: center;
+    margin-bottom: 250px; 
+}
+
+#clock-time {
+    font-size: 4.5rem; text-shadow: 0 0 20px var(--cyan);
+    letter-spacing: 5px; margin-bottom: 5px;
+}
+
+#clock-date { font-size: 1.2rem; letter-spacing: 4px; opacity: 0.8; }
+
+/* Center Boot Button */
+.center-target { text-align: center; }
+
+button {
+    background: rgba(0, 243, 255, 0.1);
+    color: var(--cyan);
+    border: 2px solid var(--cyan);
+    padding: 12px 25px;
+    font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+    transition: all 0.3s ease; pointer-events: auto;
+}
+
+button:hover { background: var(--cyan); color: #000; box-shadow: 0 0 25px var(--cyan); }
+
+#status-text { margin-top: 15px; font-size: 1.1rem; letter-spacing: 2px; }
+
+/* Weather Panel */
+.weather-data { text-align: center; padding: 10px 0; }
+.temp-readout { font-size: 3.5rem; text-shadow: 0 0 15px var(--cyan); margin-bottom: 5px; }
+.weather-label { font-size: 0.8rem; letter-spacing: 2px; opacity: 0.7; }
+
+/* Media/Image Viewer */
+.media-feed {
+    height: 180px; border: 1px solid var(--cyan);
+    position: relative; background: rgba(0, 0, 0, 0.6);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+
+.media-feed img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: sepia(100%) hue-rotate(180deg) saturate(300%) contrast(150%);
+    opacity: 0.8;
+}
+
+.media-overlay {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(0, 243, 255, 0.2); border: 1px solid var(--cyan);
+    color: var(--cyan); padding: 4px 8px; font-size: 0.75rem;
+    font-weight: bold; letter-spacing: 1px; box-shadow: 0 0 5px var(--cyan);
+}
+
+/* Bottom Bar Network Graph */
+.bottom-bar {
+    position: absolute; bottom: 20px; left: 50%;
+    transform: translateX(-50%) translateZ(80px); /* Brings it off the screen */
+    width: 60%; height: 60px;
+    background: var(--dark-cyan); border: 1px solid rgba(0, 243, 255, 0.3);
+    pointer-events: auto; display: flex; flex-direction: column; justify-content: flex-end;
+}
+
+.traffic-title {
+    position: absolute; top: 5px; left: 10px;
+    font-size: 0.7rem; letter-spacing: 2px; opacity: 0.7;
+}
+
+.traffic-graph {
+    width: 100%; height: 30px;
+    background: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0, 243, 255, 0.2) 4px, rgba(0, 243, 255, 0.2) 8px);
+    opacity: 0.5;
+}

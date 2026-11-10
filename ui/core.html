@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTRA Core</title>
+    <style>
+        :root { 
+            --spin-outer: 4s; --spin-inner: 3s; --spin-dash: 8s; --pulse-speed: 1.5s; 
+            --core-glow: #ffeedd; 
+            --iron-gold: #ffcc00;
+            --iron-red: #cc0000;
+            --iron-orange: #ff5500;
+        }
+        body.processing { --spin-outer: 1s; --spin-inner: 0.75s; --spin-dash: 2s; --pulse-speed: 0.3s; --core-glow: #ffffff; }
+        body { background-color: #050101; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; transition: all 0.5s ease; }
+        
+        .core-container { position: relative; width: 250px; height: 250px; }
+        .ring { position: absolute; border-radius: 50%; border: 2px solid transparent; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        
+        .ring-1 { width: 220px; height: 220px; border-top: 4px solid var(--iron-gold); border-bottom: 4px solid var(--iron-gold); animation: spin-clockwise var(--spin-outer) linear infinite; box-shadow: 0 0 15px var(--iron-gold), inset 0 0 15px var(--iron-gold); }
+        .ring-2 { width: 170px; height: 170px; border-left: 4px solid var(--iron-red); border-right: 4px solid var(--iron-red); animation: spin-counter var(--spin-inner) linear infinite; }
+        .ring-3 { width: 130px; height: 130px; border: 2px dashed var(--iron-orange); animation: spin-clockwise var(--spin-dash) linear infinite; opacity: 0.8; }
+        
+        .center-glow { position: absolute; width: 60px; height: 60px; background-color: var(--core-glow); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 40px var(--iron-gold), 0 0 80px var(--iron-red); animation: pulse var(--pulse-speed) ease-in-out infinite alternate; transition: background-color 0.5s ease; }
+        
+        @keyframes spin-clockwise { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes spin-counter { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(-360deg); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 30px var(--iron-gold), 0 0 60px var(--iron-red); opacity: 0.8; transform: translate(-50%, -50%) scale(0.95); } 100% { box-shadow: 0 0 60px var(--iron-gold), 0 0 120px var(--iron-red); opacity: 1; transform: translate(-50%, -50%) scale(1.05); } }
+    </style>
+</head>
+<body>
+    <div class="core-container">
+        <div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div><div class="center-glow"></div>
+    </div>
+</body>
+</html>
